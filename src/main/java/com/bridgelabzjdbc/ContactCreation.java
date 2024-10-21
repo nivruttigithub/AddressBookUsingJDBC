@@ -43,5 +43,4 @@ public class ContactCreation {
         System.out.println("Email: " + email);
         System.out.println();
     }
-
 }
