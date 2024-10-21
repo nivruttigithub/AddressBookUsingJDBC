@@ -20,6 +20,9 @@ public class AddressBook {
             System.out.println("Contacts in the database:");
             readContacts(conn);
 
+            // Update a contact (e.g., change phone number and email for contact with ID 1)
+            updateContact(conn, 1, "999-5678", "updated.email@example.com");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,6 +78,27 @@ public class AddressBook {
             e.printStackTrace();
         }
     }
+
+    // Update Operation (Update a Contact)
+    public static void updateContact(Connection conn, int id, String newPhoneNumber, String newEmail) {
+        String sql = "UPDATE contacts SET phone_number = ?, email = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newPhoneNumber);
+            pstmt.setString(2, newEmail);
+            pstmt.setInt(3, id);
+
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("The contact was updated successfully!");
+            } else {
+                System.out.println("Contact with ID " + id + " not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }
