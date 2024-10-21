@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class AddressBook {
 
-    // Database connection parameters
     static final String DB_URL = "jdbc:mysql://localhost:3306/addressbook_db";
     static final String USER = "root";
     static final String PASS = "Root@123";
@@ -16,12 +15,15 @@ public class AddressBook {
             // Insert new contact
             createContact(conn);
 
-            // Read all contacts
             System.out.println("Contacts in the database:");
             readContacts(conn);
 
-            // Update a contact (e.g., change phone number and email for contact with ID 1)
             updateContact(conn, 1, "999-5678", "updated.email@example.com");
+
+            deleteContact(conn, 1);
+
+            System.out.println("Contacts after update and delete:");
+            readContacts(conn);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,7 +72,6 @@ public class AddressBook {
                 String phoneNumber = rs.getString("phone_number");
                 String email = rs.getString("email");
 
-                // Create a Contact object and display it
                 ContactCreation contact = new ContactCreation(id, firstName, lastName, address, city, state, zip, phoneNumber, email);
                 contact.displayContact();
             }
@@ -99,6 +100,23 @@ public class AddressBook {
         }
     }
 
+    // Delete Operation (Delete a Contact)
+    public static void deleteContact(Connection conn, int id) {
+        String sql = "DELETE FROM contacts WHERE id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+
+            int rowsDeleted = pstmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("The contact was deleted successfully!");
+            } else {
+                System.out.println("Contact with ID " + id + " not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
