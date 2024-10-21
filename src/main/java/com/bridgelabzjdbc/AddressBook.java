@@ -16,6 +16,10 @@ public class AddressBook {
             // Insert new contact
             createContact(conn);
 
+            // Read all contacts
+            System.out.println("Contacts in the database:");
+            readContacts(conn);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,4 +48,33 @@ public class AddressBook {
             e.printStackTrace();
         }
     }
+
+    // Read Operation (Retrieve All Contacts)
+    public static void readContacts(Connection conn) {
+        String sql = "SELECT * FROM contacts";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String address = rs.getString("address");
+                String city = rs.getString("city");
+                String state = rs.getString("state");
+                String zip = rs.getString("zip");
+                String phoneNumber = rs.getString("phone_number");
+                String email = rs.getString("email");
+
+                // Create a Contact object and display it
+                ContactCreation contact = new ContactCreation(id, firstName, lastName, address, city, state, zip, phoneNumber, email);
+                contact.displayContact();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
